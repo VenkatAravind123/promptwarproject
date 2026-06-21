@@ -17,6 +17,11 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/activities', require('./routes/activities'));
 app.use('/api/assistant', require('./routes/assistant'));
 
+// Base route
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'EcoSmart AI API is running' });
+});
+
 // Connect to MongoDB
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
