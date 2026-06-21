@@ -12,12 +12,14 @@ const Dashboard = ({ token }) => {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   const fetchData = async () => {
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const [actRes, insRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/activities', { headers }),
-        axios.get('http://localhost:5000/api/assistant/insights', { headers })
+        axios.get(`${API_URL}/api/activities`, { headers }),
+        axios.get(`${API_URL}/api/assistant/insights`, { headers })
       ]);
       setActivities(actRes.data);
       setInsights(insRes.data);

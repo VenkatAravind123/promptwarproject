@@ -10,6 +10,8 @@ const Auth = ({ setToken }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -17,10 +19,16 @@ const Auth = ({ setToken }) => {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      const res = await axios.post(`http://localhost:5000${endpoint}`, formData);
+      const res = await axios.post(`${API_URL}${endpoint}`, formData);
       setToken(res.data.token);
     } catch (err) {
-      setError(err.response?.data?.msg || 'An error occurred');
+      if (!err.response) {
+        setError('Network error: Unable to contact the backend server. Please verify your VITE_API_URL environment variable is correct and does not end with a trailing slash.');
+      } else if (typeof err.response.data === 'string') {
+        setError(`Server error: ${err.response.data}`);
+      } else {
+        setError(err.response.data.msg || 'An error occurred');
+      }
     }
   };
 
