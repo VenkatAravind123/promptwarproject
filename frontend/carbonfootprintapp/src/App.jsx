@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { Leaf } from 'lucide-react';
+import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
 import Auth from './components/Auth';
 import './index.css';
@@ -22,24 +24,46 @@ function App() {
   return (
     <Router>
       <header className="app-header">
-        <h1>EcoSmart AI</h1>
-        {token && (
-          <button className="btn btn-secondary" onClick={handleLogout}>
-            Logout
-          </button>
-        )}
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Leaf size={28} color="var(--primary-color)" />
+          <span style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-color)', letterSpacing: '-0.025em' }}>
+            EcoSmart AI
+          </span>
+        </Link>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          {token ? (
+            <>
+              <Link to="/dashboard" className="btn btn-secondary" style={{ textDecoration: 'none' }}>
+                Dashboard
+              </Link>
+              <button className="btn" onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn" style={{ textDecoration: 'none' }}>
+              Login
+            </Link>
+          )}
+        </div>
       </header>
       
-      <main>
+      <main style={{ minHeight: 'calc(100vh - 160px)' }}>
         <Routes>
           <Route 
-            path="/login" 
-            element={!token ? <Auth setToken={setToken} /> : <Navigate to="/" />} 
+            path="/" 
+            element={<LandingPage token={token} />} 
           />
           <Route 
-            path="/" 
+            path="/login" 
+            element={!token ? <Auth setToken={setToken} /> : <Navigate to="/dashboard" />} 
+          />
+          <Route 
+            path="/dashboard" 
             element={token ? <Dashboard token={token} /> : <Navigate to="/login" />} 
           />
+          {/* Catch-all route redirecting back to landing page */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
     </Router>
@@ -47,3 +71,4 @@ function App() {
 }
 
 export default App;
+
