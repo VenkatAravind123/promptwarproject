@@ -26,6 +26,9 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
+// Disable command buffering so queries fail immediately if the DB is disconnected
+mongoose.set('bufferCommands', false);
+
 mongoose.connect(MONGO_URI)
   .then(() => {
     console.log('Connected to MongoDB');
